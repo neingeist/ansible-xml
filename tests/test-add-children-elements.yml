@@ -11,3 +11,14 @@
 
   - name: Test expected result
     command: diff results/test-add-children-elements.xml /tmp/ansible-xml-beers.xml
+
+  - name: Add child element (again)
+    xml:
+      file: /tmp/ansible-xml-beers.xml
+      xpath: /business/beers
+      add_children:
+        - beer: "Old Rasputin"
+    register: add_children_again
+
+  - fail: msg="Adding children is not idempotent!"
+    when: add_children_again.changed
